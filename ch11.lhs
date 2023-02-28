@@ -16,21 +16,21 @@ Intermission: Exercises p. 396
 
 > newtype Goat = Goat Int deriving (Show, TooMany)
 
-1.
+1. Write an instance of the typeclass for the type (Int, String).
 
 > instance TooMany (Int, String) where
 >   tooMany (i, _) = i > 45
 
 > newtype Lamb = Lamb (Int, String) deriving (Show, TooMany)
 
-2.
+2. Make another TooMany instance for (Int, Int).
 
  instance TooMany (Int, Int) where
    tooMany (i, i') = (i + i') > 100
 
 > newtype Lambs = Lambs (Int, Int) deriving (Show, TooMany)
 
-3. 
+3. Make another TooMany instance for (Num a, TooMany a) => (a, a).
 
 > instance (Num a, TooMany a) => TooMany (a, a) where
 >   tooMany (x, y) = True
@@ -38,23 +38,25 @@ Intermission: Exercises p. 396
 -------------------------------------------------------------------------------- 
 Intermission: Exercises p. 398
 -------------------------------------------------------------------------------- 
-1.
+1. Given:
 
 > data BigSmall = 
 >          Big Bool
 >        | Small Bool 
 >          deriving (Eq, Show)
 
-What is the cardinality of this datatype? (2+2)
+What is the cardinality of this datatype? 
+(2+2)
 
-2. 
+2. Given: 
 
 > data NumberOrBool = 
 >         Numba Int8
 >       | BoolyBool Bool
 >         deriving (Eq, Show)
 
-What is the cardinality of NumberOrBool (128+127+1+2)
+What is the cardinality of NumberOrBool? 
+(128+127+1+2)
 
 -------------------------------------------------------------------------------- 
 Intermission: Jammin Exercises p. 402
