@@ -209,3 +209,61 @@ Write map for BinaryTree
 >   then print "yup okay!"
 >   else error "test failed!"
 
+-------------------------------------------------------------------------------- 
+Convert binary trees to lists
+--------------------------------------------------------------------------------
+
+> preorder :: BinaryTree a -> [a]
+> preorder Leaf = []
+> preorder (Node left a right) = a : preorder left ++ preorder right
+
+> inorder :: BinaryTree a -> [a]
+> inorder Leaf = []
+> inorder (Node left a right) = preorder left ++ [a] ++ preorder right
+
+> postorder :: BinaryTree a -> [a]
+> postorder Leaf = []
+> postorder (Node left a right) = postorder left ++ postorder right ++ [a] 
+
+> testTree :: BinaryTree Integer
+> testTree = Node (Node Leaf 1 Leaf) 2 (Node Leaf 3 Leaf)
+
+> testPreorder :: IO ()
+> testPreorder =
+>   if preorder testTree == [2, 1, 3]
+>   then putStrLn "Preorder fine!"
+>   else putStrLn "Bad news bears."
+
+> testInorder :: IO ()
+> testInorder =
+>   if inorder testTree == [1, 2, 3]
+>   then putStrLn "Inorder fine!"
+>   else putStrLn "Bad news bears."
+
+> testPostorder :: IO ()
+> testPostorder =
+>   if postorder testTree == [1, 3, 2]
+>   then putStrLn "Postorder fine!"
+>   else putStrLn "postorder failed check"
+
+> main :: IO ()
+> main = do
+>   testPreorder
+>   testInorder
+>   testPostorder
+
+-------------------------------------------------------------------------------- 
+Write foldr for BinaryTree
+--------------------------------------------------------------------------------
+
+> foldTree :: (a -> b -> b) -> b -> BinaryTree a -> b
+> foldTree f acc Leaf = acc
+> foldTree f acc (Node left a right) = f a (foldTree f (foldTree f acc left) right)
+
+
+-------------------------------------------------------------------------------- 
+Write foldr for BinaryTree
+--------------------------------------------------------------------------------
+
+> mapTree' :: (a -> b) -> BinaryTree a -> BinaryTree b
+> mapTree' f bt = foldTree (\a acc -> Node acc (f a) Leaf) Leaf bt
