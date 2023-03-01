@@ -78,7 +78,7 @@ Intermission: Jammin Exercises p. 402
 2. Rewrite JamJars with record syntax.
 
 > data JamJars = 
->   Jam { fruit :: Fruit 
+>   Jam {fruit :: Fruit
 >       , jars :: Int} 
 >         deriving (Ord, Eq, Show)
 
@@ -122,3 +122,90 @@ Intermission: Jammin Exercises p. 402
 
 > groupJam :: [JamJars] -> [[JamJars]]
 > groupJam = groupBy (\a b -> compareKind a b == EQ) . sortJam
+
+-------------------------------------------------------------------------------- 
+Intermission: Exercises p. 406
+-------------------------------------------------------------------------------- 
+1. Given
+
+ data FlowerType = 
+     Gardenia
+   | Daisy
+   | Rose
+   | Lilac
+     deriving Show
+
+> type Gardener = String
+
+ data Garden =
+   Garden Gardener FlowerType
+   deriving Show
+
+What is the normal form of Garden?
+
+> data Garden = 
+>     Gardenia Gardener
+>   | Daisy Gardener
+>   | Rose Gardener
+>   | Lilac Gardener
+>     deriving Show
+
+-------------------------------------------------------------------------------- 
+Intermission: Exercises p. 423
+--------------------------------------------------------------------------------
+1. Determine how many unique inhabitants each type has.
+
+> data Quad =
+>     One
+>   | Two
+>   | Three
+>   | Four
+>     deriving Show
+
+eQuad :: Either Quad Quad
+(4+4)
+
+prodQuad :: (Quad, Quad)
+(4*4)
+
+funcQuad :: Quad -> Quad
+(4^4)
+
+prodTBool :: (Bool, Bool, Bool)
+2*2*2
+
+gTwo :: Bool -> Bool -> Bool
+2^(2*2)
+
+fTwo :: Bool -> Quad -> Quad
+4^(4*2)
+
+-------------------------------------------------------------------------------- 
+Write map for BinaryTree
+--------------------------------------------------------------------------------
+
+> data BinaryTree a =
+>     Leaf
+>   | Node (BinaryTree a) a (BinaryTree a)
+>     deriving (Eq, Ord, Show)
+
+> mapTree :: (a -> b) -> BinaryTree a -> BinaryTree b
+> mapTree _ Leaf = Leaf
+> mapTree f (Node left a right) = 
+>  (Node 
+>   (mapTree f left) 
+>     (f a) 
+>       (mapTree f right))
+
+> testTree' :: BinaryTree Integer
+> testTree' =
+>   Node (Node Leaf 3 Leaf) 1 (Node Leaf 4 Leaf)
+
+> mapExpected =
+>   Node (Node Leaf 4 Leaf) 2 (Node Leaf 5 Leaf)
+
+> mapOkay =
+>   if mapTree (+1) testTree' == mapExpected
+>   then print "yup okay!"
+>   else error "test failed!"
+
