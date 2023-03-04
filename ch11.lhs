@@ -3,6 +3,7 @@
 
 > import Data.Int
 > import Data.List
+> import Data.Char
 
 -------------------------------------------------------------------------------- 
 Intermission: Exercises p. 396
@@ -246,11 +247,11 @@ Convert binary trees to lists
 >   then putStrLn "Postorder fine!"
 >   else putStrLn "postorder failed check"
 
-> main :: IO ()
-> main = do
->   testPreorder
->   testInorder
->   testPostorder
+ main :: IO ()
+ main = do
+   testPreorder
+   testInorder
+   testPostorder
 
 -------------------------------------------------------------------------------- 
 Write foldr for BinaryTree
@@ -261,9 +262,200 @@ Write foldr for BinaryTree
 > foldTree f acc (Node left a right) = f a (foldTree f (foldTree f acc left) right)
 
 
--------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------
 Write foldr for BinaryTree
 --------------------------------------------------------------------------------
 
 > mapTree' :: (a -> b) -> BinaryTree a -> BinaryTree b
 > mapTree' f bt = foldTree (\a acc -> Node acc (f a) Leaf) Leaf bt
+
+--------------------------------------------------------------------------------
+Chapter Exercises
+--------------------------------------------------------------------------------
+1. Given the following datatype:
+ data Weekday =
+    Monday
+  | Tuesday
+  | Wednesday
+  | Thursday
+  | Friday
+
+a) Weekday is a type with ﬁve data constructors
+
+2. f Friday -> "Miller Time" 
+   f :: Weekday -> String
+
+3. Types deﬁned with the data keyword
+b) must begin with a capital letter
+
+4. The function g xs = xs !! (length xs - 1)
+c) delivers the ﬁnal element of xs
+
+--------------------------------------------------------------------------------
+Vigene Cipher
+--------------------------------------------------------------------------------
+
+> data Secret = 
+>    Secret { phrase :: String
+>           , keyword :: String}
+>           deriving Show
+
+> kwrdStr :: Secret -> String
+> kwrdStr s = concat $ replicate (length (phrase s)) (map toUpper (keyword s))
+
+> kwrd :: [Char] -> [Char] -> [Char]
+> kwrd [] _ = []
+> kwrd (x:xs) (y:ys)
+>   | isSpace x = x : kwrd xs (y:ys)
+>   | otherwise = y : kwrd xs ys
+
+> helper :: Int -> Int
+> helper n
+>   | n == 32   = 0
+>   | otherwise = n - 65
+
+> corrector :: Int -> Int
+> corrector n
+>   | n == 32   = 32
+>   | n < 91    = n
+>   | otherwise = (mod n 91) + 65
+
+> phrsLst :: Secret -> [Int]
+> phrsLst s = map ord (map toUpper (phrase s))
+
+> kwrdLst :: Secret -> [Int]
+> kwrdLst s = map (\x -> helper x) $ map ord $ kwrd (phrase s) (kwrdStr s)
+
+> cipher :: Secret -> [Char]
+> cipher s = map chr $ 
+>             map (\x -> corrector x) $ 
+>             zipWith (+) (phrsLst s) (kwrdLst s) 
+
+--------------------------------------------------------------------------------
+As-patterns
+--------------------------------------------------------------------------------
+
+> f :: Show a => (a, b) -> IO (a, b)
+> f t@(a, _) = do
+>  print a
+>  return t
+
+> doubleUp :: [a] -> [a]
+> doubleUp []       = []
+> doubleUp xs@(x:_) = x : xs
+
+1.
+
+> isSubsequenceOf' :: (Eq a) => [a] -> [a] -> Bool
+> isSubsequenceOf' [] _ = True
+> isSubsequenceOf' _ [] = False
+> isSubsequenceOf' xss@(x:xs) yss@(y:ys)
+>   | x == y    = isSubsequenceOf' xs yss
+>   | otherwise = isSubsequenceOf' xss ys
+
+> testisSubsequenceOf1 :: IO ()
+> testisSubsequenceOf1 =
+>   if isSubsequenceOf' "blah" "blahwoot" 
+>   then putStrLn "fine!"
+>   else putStrLn "failed check"
+
+> testisSubsequenceOf2 :: IO ()
+> testisSubsequenceOf2 =
+>   if isSubsequenceOf' "blah" "wootblah"  
+>   then putStrLn "fine!"
+>   else putStrLn "failed check"
+
+> testisSubsequenceOf3 :: IO ()
+> testisSubsequenceOf3 =
+>   if isSubsequenceOf' "blah" "wwotblah"
+>   then putStrLn "fine!"
+>   else putStrLn "failed check"
+
+> testisSubsequenceOf4 :: IO ()
+> testisSubsequenceOf4 =
+>   if isSubsequenceOf' "blah" "wootbla" == False
+>   then putStrLn "fine!"
+>   else putStrLn "failed check"
+
+> main :: IO ()
+> main = do
+>   testisSubsequenceOf1 
+>   testisSubsequenceOf2 
+>   testisSubsequenceOf3
+>   testisSubsequenceOf4 
+
+2. 
+
+> myWords :: String -> [String]
+> myWords [] = []
+> myWords (' ':ss) = myWords ss
+> myWords ss = takeWhile (/=' ') ss : myWords 
+>                      (dropWhile (/=' ') ss)
+
+> capitalizeWords :: String -> [(String, String)]
+> capitalizeWords = map cap . myWords 
+>     where cap xss@(x:xs) = (,) xss ((toUpper x) : xs)
+
+--------------------------------------------------------------------------------
+Langauge Exercises
+--------------------------------------------------------------------------------
+1. Write a function that capitalizes a word.
+
+> capitalizeWord :: String -> String
+> capitalizeWord [] = []
+> capitalizeWord (x:xs) = toUpper x : xs
+
+2. Write a function that capitalizes sentences in a paragraph.
+
+> splitParag []       = []
+> splitParag ('.':ss) = splitParag ss
+> splitParag (' ':ss) = splitParag ss
+> splitParag ss = takeWhile (/='.') ss : splitParag (dropWhile (/='.') ss)
+
+> capitalizeParagraph :: String -> String
+> capitalizeParagraph = unwords. map capP . splitParag
+>     where capP (x:xs) = toUpper x : xs ++ "."
+
+--------------------------------------------------------------------------------
+ PhoneExercise
+--------------------------------------------------------------------------------
+
+> data DaPhone = DaPhone [(Char, String)] deriving Show
+
+> encoding = DaPhone
+>          [
+>            ('2', "abc2")
+>          , ('3', "def3")
+>          , ('4', "ghi4")
+>          , ('5', "jkl5")
+>          , ('6', "mno6")
+>          , ('7', "pqrs7")
+>          , ('8', "tuv8")
+>          , ('9', "wxyz9")
+>          , ('0', "+ ")
+>          , ('#', ".,")
+>          , ('*', "^")
+>          ]
+
+> type Presses = Int
+> type Digit = Char
+
+> getPresses :: Char -> String -> Int
+> getPresses c cs = case elemIndex c cs of
+>   Just i  -> i + 1
+>   Nothing -> 0
+
+> onPhone :: Char -> DaPhone -> (Digit, Presses)
+> onPhone c (DaPhone xs)
+>   | elem c (snd (head xs)) = (,) (fst (head xs)) (getPresses c (snd (head xs)))
+>   | otherwise = onPhone c (DaPhone (tail xs))
+
+> reverseTaps :: Char -> DaPhone -> [(Digit, Presses)]
+> reverseTaps c (DaPhone xs)
+>   | isUpper c = ('*', 1) : [onPhone (toLower c) (DaPhone xs)]
+>   | otherwise = [onPhone c (DaPhone xs)]
+
+> cellPhonesDead :: String -> DaPhone -> [(Digit, Presses)]
+> cellPhonesDead [] _ = []
+> cellPhonesDead (c:cs) (DaPhone xs) = reverseTaps c (DaPhone xs) ++ cellPhonesDead cs (DaPhone xs)
+
