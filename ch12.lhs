@@ -115,7 +115,7 @@ a vowel-initial word.
 >     go (x:xs)
 >       | x == "the" && elem (head (head xs)) vowels = 1 + go xs
 >       | otherwise  = go xs    
->     vowels = "aeioury"
+>     vowels = "aeiou"
 
 3. Return the number of letters that are vowels in a word.
 
@@ -125,8 +125,27 @@ a vowel-initial word.
 >   | elem x vowels = 1 + countVowels xs
 >   | otherwise     = countVowels xs
 >   where
->     vowels = "aeioury"
+>     vowels = "aeiou"
 
 -------------------------------------------------------------------------------- 
 Validate the word
 -------------------------------------------------------------------------------- 
+1. Use the Maybe type to write a function that counts the number of
+vowels in a string and the number of consonants. If the number
+of vowels exceeds the number of consonants, the function returns
+Nothing.
+
+> newtype Word' = 
+>   Word' String
+>   deriving (Eq, Show)
+
+> mkWord :: String -> Maybe Word'
+> mkWord xs = if (go xs) > 0 then Nothing else Just (Word' xs)
+>  where 
+>     go [] = 0
+>     go (x:xs)
+>       | x == ' '      = go xs
+>       | elem x vowels = 1 + go xs
+>       | otherwise     = go xs - 1
+>     vowels = "aeiou"
+
