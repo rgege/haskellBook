@@ -149,3 +149,84 @@ Nothing.
 >       | otherwise     = go xs - 1
 >     vowels = "aeiou"
 
+-------------------------------------------------------------------------------- 
+It's only natural
+-------------------------------------------------------------------------------- 
+1. Implement functions to convert Naturals to Integers and Integers to Naturals.
+
+> data Nat = 
+>     Zero
+>   | Succ Nat
+>   deriving (Eq, Show)
+
+> natToInteger :: Nat -> Integer
+> natToInteger Zero = 0
+> natToInteger (Succ a) = 1 + natToInteger a 
+
+> integerToNat :: Integer -> Maybe Nat
+> integerToNat n
+>   | n < 0 = Nothing
+>   | otherwise = Just $ conv n 
+>   where
+>     conv 0 = Zero
+>     conv n = Succ $ conv (n-1)
+
+-------------------------------------------------------------------------------- 
+Small library for Maybe
+-------------------------------------------------------------------------------- 
+Write the following functions. This may take some time.
+
+1. Simple boolean checks for Maybe values.
+
+> isJust :: Maybe a -> Bool
+> isJust (Just _) = True
+> isJust Nothing  = False
+
+> isNothing :: Maybe a -> Bool
+> isNothing (Just _) = False
+> isNothing Nothing = True
+
+2. The following is the Maybe catamorphism. 
+You can turn a Maybe value into anything else with this.
+
+> mayybee :: b -> (a -> b) -> Maybe a -> b
+> mayybee x _ Nothing = x
+> mayybee x f (Just y) = f y
+
+3. In case you just want to provide a fallback value.
+
+> fromMaybe :: a -> Maybe a -> a
+> fromMaybe x Nothing = x
+> fromMaybe _ (Just y) = y 
+
+
+4. Converting between List and Maybe.
+
+> listToMaybe :: [a] -> Maybe a
+> listToMaybe []     = Nothing
+> listToMaybe (x:_) = Just x
+
+> maybeToList :: Maybe a -> [a]
+> maybeToList Nothing  = []
+> maybeToList (Just x) = [x]  
+
+5. For when we just want to drop the Nothing values from our list.
+
+> catMaybes :: [Maybe a] -> [a]
+> catMaybes [] = []
+> catMaybes (Nothing:xs) = catMaybes xs
+> catMaybes ((Just x):xs) = x : catMaybes xs
+
+6. sequence
+
+ flipMaybe :: [Maybe a] -> Maybe [a]
+
+> flipMaybe xs = if (go xs) == "" then Nothing else Just (go xs)
+>   where
+>     go []            = []
+>     go (Nothing:xs)  = ""
+>     go ((Just x):xs) = x : go xs
+
+-------------------------------------------------------------------------------- 
+Small library for Either
+-------------------------------------------------------------------------------- 
