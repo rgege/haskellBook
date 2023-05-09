@@ -60,18 +60,17 @@ main =
       it "Applicative" $
         property
           (quickBatch $
-        applicative (undefined :: Three' String (Int, Float, String)))
+           applicative (undefined :: Three' String (Int, Float, String)))
     describe "Four" $ do
       it "Functor" $
         property (quickBatch $ functor (undefined :: Four String String String (Int, Float, String)))
       it "Applicative" $
         property
           (quickBatch $
-        applicative (undefined :: Four String String String (Int, Float, String)))
-    describe "Four'" $ do
+     describe "Four'" $ do
       it "Functor" $
-        property (quickBatch $ functor (undefined :: Four' String (Int, Float, String)))
+        property (quickBatch $ functor (undefined :: Four' String String String (Int, Float, String)))
       it "Applicative" $
         property
           (quickBatch $
-        applicative (undefined :: Four' String (Int, Float, String)))
+           applicative (undefined :: Four' String String String (Int, Float, String)))        applicative (undefined :: Four String String String (Int, Float, String)))
