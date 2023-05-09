@@ -56,4 +56,33 @@ cowFromString name' age' weight' =
   Cow <$> noEmpty name'
       <*> noNegative age'
       <*> noNegative weight'
+------------------------------------------------------------------
+data Validation err a =
+    Failure err
+  | Success a
+  deriving (Eq, Show)
 
+-- natural transformations
+validToEither :: Validation e a -> Either e a
+validEither (Failure err) = Left err
+validToEither (Success a) = Right a
+
+eitherToValid :: Either e a -> Validation e a
+eitherToValid (Left err) = Failure err
+eitherToValid (Right a)  = Success a
+
+instance Functor (Validation e) where
+  fmap _ (Failure err) = Failure err
+  fmap g (Success a)   = Success $ g a
+
+instance Monoid e => Applicative (Validation e) where
+  pure  = Success
+  (<*>) (Failure e) (Success a) = Failure e
+  (<*>) (Failure e) (Failure x) = Failure (e <> x)
+  (<*>) (Success g) (Success a) = Success $ g a
+
+data Errors =
+    DevideByZero
+  | StackOverflow
+  | MooglesChewedWires
+  deriving (Eq, Show)
