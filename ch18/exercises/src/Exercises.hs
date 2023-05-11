@@ -80,3 +80,47 @@ data Identity a = Identity a deriving (Eq, Ord, Show)
 
 instance Arbitrary a => Arbitrary (Identity a) where
   arbitrary = Identity <$> arbitrary
+
+instance Eq a => EqProp (Identity a) where
+  (=-=) = eq
+
+instance Functor Identity where
+  fmap f (Identity a) = Identity $ f a
+
+instance Applicative Identity where
+  pure = Identity
+  (<*>) (Identity f) (Identity a) = Identity $ f a
+
+instance Monad Identity where
+  return = pure
+  (>>=) (Identity a) f = f a
+------------------------------------------------------------------
+data List a =
+    Nil
+  | Cons a (List a)
+  deriving (Eq, Show)
+
+instance Arbitrary a => Arbitrary (List a) where
+  arbitrary = frequency [(1, return Nil),
+                         (2, Cons <$> arbitrary <*> arbitrary)]
+
+instance Eq a => EqProp (List a) where
+  (=-=) = eq
+
+instance Functor List where
+  fmap _ Nil         = Nil
+  fmap g (Cons x xs) = Cons (g x) (fmap g xs)
+
+append :: List a -> List a -> List a
+append Nil ys         = ys
+append (Cons x xs) ys = Cons x $ xs `append` ys
+
+instance Applicative List where
+  pure a = Cons a Nil
+  (<*>) (Cons x xs) ys = append (x <$> ys) (xs <*> ys)
+  (<*>) _ _            = Nil
+
+instance Monad List where
+  return = pure
+  (>>=) Nil _         = Nil
+  (>>=) (Cons x xs) f = f x `append` (xs >>= f)

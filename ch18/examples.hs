@@ -59,7 +59,7 @@ twoBinds' =
             ++ name ++ " who is: "
             ++ age ++ " years old.")
 ------------------------------------------------------------------
---List
+--List Monad
 ------------------------------------------------------------------
 twiceWhenEven :: [Integer] -> [Integer]
 twiceWhenEven xs = do
@@ -76,7 +76,7 @@ twiceWhenEven' xs = do
     else []
 
 ------------------------------------------------------------------
---Maybe
+--Maybe Monad
 ------------------------------------------------------------------
 data Cow = Cow {
     name   :: String
@@ -136,3 +136,70 @@ mkSheepM n a w = do
   age  <- noNegative a
   weight <- noNegative w
   return $ Sheep name age weight
+------------------------------------------------------------------
+f :: Maybe Integer
+f = Just 1
+
+g :: Maybe String
+g = Just "1"
+
+h :: Maybe Integer
+h = Just 10191
+
+zed :: a -> b -> c -> (a, b, c)
+zed = (,,)
+
+zed' :: Monad m => a -> b -> c -> m (a, b, c)
+zed' a b c = return (a, b ,c)
+
+doSomething = do
+  a <- f
+  b <- g
+  c <- h
+  return $ zed a b c
+
+doSomething' = do
+  a <- f
+  b <- g
+  c <- h
+  zed' a b c
+
+smthA = (,,) <$> f <*> g <*> h
+------------------------------------------------------------------
+--Either Monad
+------------------------------------------------------------------
+type Founded = Int
+type Coders  = Int
+
+data SoftwareShop = Shop {
+    founded     :: Founded
+  , programmers :: Coders
+} deriving (Eq, Show)
+
+data FoundedError =
+    NegativeYears Founded
+  | TooManyYears Founded
+  | NegativeCoders Coders
+  | TooManyCoders Coders
+  | TooManyCodersForYears Founded Coders
+  deriving (Eq, Show)
+
+validateFounded :: Int -> Either FoundedError Founded
+validateFounded n
+  | n < 0 = Left $ NegativeYears n
+  | n > 500 = Left $ TooManyYears n
+  |otherwise = Right n
+
+validateCoders :: Int -> Either FoundedError Coders
+validateCoders n
+  | n < 0 = Left $ NegativeCoders n
+  | n > 5000 = Left $ TooManyCoders n
+  | otherwise = Right n
+
+mkSoftware :: Int -> Int -> Either FoundedError SoftwareShop
+mkSoftware years coders = do
+  founded <- validateFounded years
+  programmers <- validateCoders coders
+  if programmers > div founded 10
+      then Left $ TooManyCodersForYears founded programmers
+      else Right $ Shop founded programmers
