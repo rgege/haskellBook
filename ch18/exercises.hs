@@ -32,14 +32,19 @@ instance Monad (Sum a) where
 -----------------------------------------------------------------
 --1.
 j :: Monad m => m (m a) -> m a
-j m = m >>= id
+j mma = mma >>= id
 --2.
 l1 :: Monad m => (a -> b) -> m a -> m b
 l1 f m = m >>= return . f
 --3.
-l2 :: Monad m => (a, b, c) -> m a -> m b -> m c
-l2 = undefined
+l2 :: Monad m => (a -> b -> c) -> m a -> m b -> m c
+l2 f m1 m2 = m1 >>= \a -> m2 >>= \b -> return $ f a b
 --4.
-
-
-
+a :: Monad m => m a -> m (a -> b) -> m b
+a ma mf  = ma >>= \x -> mf >>= \f -> return $ f x
+--5.
+meh :: Monad m => [a] -> (a -> m b) -> m [b]
+meh (x:xs) g = g x >>= \a -> (meh xs g) >>= \as -> return $ a:as
+--6.
+flipType :: (Monad m) => [m a] -> m [a]
+flipType ma = meh ma id

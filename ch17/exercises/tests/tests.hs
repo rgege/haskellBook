@@ -5,8 +5,7 @@ import           Test.QuickCheck
 import           Test.QuickCheck.Checkers
 import           Test.QuickCheck.Classes
 
-import           Exercises                (Four, Four', Identity, List, Pair,
-                                           Three, Three', Two, Validation)
+import           Exercises
 
 main :: IO ()
 main =

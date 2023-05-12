@@ -1,14 +1,4 @@
-module Exercises
-  (List
-  , Validation
-  , Identity
-  , Pair
-  , Two
-  , Three
-  , Three'
-  , Four
-  , Four'
-  ) where
+module Exercises where
 
 import           Test.QuickCheck
 import           Test.QuickCheck.Checkers

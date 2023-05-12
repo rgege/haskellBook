@@ -1,9 +1,4 @@
-module Exercises
-  ( Identity
-  , Pair
-  , Two
-  , Three
-  ) where
+module Exercises where
 
 import           Test.QuickCheck
 
@@ -40,11 +35,11 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (Two a b) where
     a <- arbitrary
     b <- arbitrary
     return (Two a b)
-    
+
 data Three a b c = Three a b c deriving (Eq, Show)
 
 instance Functor (Three a b) where
-  fmap f (Three a b c) = Three a b (f c) 
+  fmap f (Three a b c) = Three a b (f c)
 
 instance (Arbitrary a, Arbitrary b, Arbitrary c) => Arbitrary (Three a b c) where
   arbitrary = do

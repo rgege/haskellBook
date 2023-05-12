@@ -5,7 +5,7 @@ module Main where
 import           Test.Hspec
 import           Test.QuickCheck
 
-import           Exercises       (Identity, Pair, Two, Three)
+import           Exercises
 
 
 --------------------------------------------------------------------------------
