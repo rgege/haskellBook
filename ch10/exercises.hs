@@ -1,0 +1,9 @@
+f1 = foldr (++) "" ["woot", "WOOT", "woot"]
+f2 = foldr max [] ["fear is the little death"]
+f3 = foldr (&&) True [False, True]
+f4 = foldr (||) True [False, True]
+f5 = foldl (flip $ (++) . show) "" [1..5]
+f6 = foldr (flip const) 'a' [1..5]
+f7 = foldr const 'a' "tacos"
+f8 = foldl const 0 "burritos"
+f9 = foldl const 'z' [1..5]
