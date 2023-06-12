@@ -1,4 +1,23 @@
 ------------------------------------------------------------------
+--Warm-up and review
+------------------------------------------------------------------
+--1.
+
+--2. calculates the average word length of the input string.
+seekritFunc :: String -> Int
+seekritFunc x =
+  div (sum (map length (words x)))
+      (length (words x))
+
+seekritFuncPrec :: String -> Double
+seekritFuncPrec x =
+  (/) (fromIntegral (sum (map length (words x))))
+      (fromIntegral (length (words x)))
+
+
+
+
+------------------------------------------------------------------
 --Chapter Exercises
 ------------------------------------------------------------------
 
@@ -27,6 +46,8 @@ myReverse = foldl (flip (:)) []
 -- 5.
 myMap :: (a -> b) -> [a] -> [b]
 myMap f = foldr (\a b -> f a : b) []
+-- foldr ((:) . f) []
+
 -- 6.
 myFilter :: (a -> Bool) -> [a] -> [a]
 myFilter f = foldr (\a b -> if f a == True then a : b else b) []
@@ -36,6 +57,8 @@ squish = foldr (++) []
 -- 8.
 squishMap :: (a -> [b]) -> [a] -> [b]
 squishMap f = foldr (\a b -> f a ++ b) []
+-- foldr ((++) . f) []
+
 -- 9.
 squishAgain :: [[a]] -> [a]
 squishAgain = squishMap id
