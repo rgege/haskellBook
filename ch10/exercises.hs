@@ -55,6 +55,19 @@ factN x = fact !! fromIntegral x
 --Warm-up and review
 ------------------------------------------------------------------
 --1.
+stops = "pbtdkg"
+vowels = "aeiou"
+
+sws  = [ (x, y, z) | x <- stops, y <- vowels, z <- stops ]
+swsP = [ (x, y, z) | x <- stops, y <- vowels, z <- stops , x == 'p']
+
+noun = ["lamp", "cellar", "leather", "belief", "zipper", "oranges", "existence", "sheet", "soap", "gate",
+        "recess", "wing"]
+
+verb = ["confess", "consider", "kiss", "behave", "tumble", "stuff", "mug", "fool", "surprise", "regret",
+       "flood", "whip" ]
+
+nvn = [ (x, y, z) | x <- noun, y <- verb, z <- noun ]
 
 --2. calculates the average word length of the input string.
 seekritFunc :: String -> Int
