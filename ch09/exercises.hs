@@ -1,4 +1,5 @@
 import           Data.Bool
+import           Data.Char
 ------------------------------------------------------------------
 --Extracting portions of lists
 ------------------------------------------------------------------
@@ -92,6 +93,20 @@ myZip' = myZipWith (,)
 ------------------------------------------------------------------
 --Chapter Exercises
 ------------------------------------------------------------------
+--2.
+myFiltU = filter isUpper
+--3.
+myCap []     = []
+myCap (x:xs) = toUpper x : xs
+--4.
+myCapR []     = []
+myCapR (x:xs) = toUpper x : myCapR xs
+--5.
+test xs = toUpper $ head xs
+--6.
+testC xs = (toUpper . head) xs
+testP = toUpper . head
+
 --1.
 myOr :: [Bool] -> Bool
 myOr []     = False
