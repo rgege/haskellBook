@@ -126,7 +126,7 @@ squishAgain :: [[a]] -> [a]
 squishAgain = squishMap id
 -- 10.
 myMaximumBy :: Num a => (a -> a -> Ordering) -> [a] -> a
-myMaximumBy f = foldl (\a b -> if (f a b) == GT then a else b) 1
+myMaximumBy f xs = foldl (\a b -> if (f a b) == GT then a else b) (head xs) xs
 -- 11.
 myMinimumBy :: Num a => (a -> a -> Ordering) -> [a] -> a
-myMinimumBy f = foldl (\a b -> if (f a b) == LT then a else b) 1
+myMinimumBy f xs = foldl (\a b -> if (f a b) == LT then a else b) (head xs) xs
